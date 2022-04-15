@@ -151,13 +151,7 @@
             
         } else {
             info.instanceMethod = false;
-            info.target = NSClassFromString(targetStr);
-            
-            // swift class 需要加上命名空间
-            NSString *bundleName = [self bundleName];
-            if (!info.target && bundleName.length > 0) {
-                info.target = NSClassFromString([NSString stringWithFormat:@"%@.%@", bundleName, targetStr]);
-            }
+            info.target = [self classFromString:targetStr];
             
             if (!info.target) { // 解析target失败
                 *errorType = KcEvalMethodParserTargetError;
@@ -200,17 +194,20 @@
 
 // MARK: - help
 
-/// 创建对象
-+ (nullable id)makeObjcWithClassName:(NSString *)className {
-    id objc = NSClassFromString(className);
+/// 生成class
++ (nullable Class)classFromString:(NSString *)className {
+    Class cls = NSClassFromString(className);
+    if (cls) {
+        return cls;
+    }
     
     // swift class 需要加上命名空间
     NSString *bundleName = [self bundleName];
-    if (!objc && bundleName.length > 0) {
-        objc = NSClassFromString([NSString stringWithFormat:@"%@.%@", bundleName, className]);
+    if (bundleName.length > 0) {
+        cls = NSClassFromString([NSString stringWithFormat:@"%@.%@", bundleName, className]);
     }
     
-    return objc;
+    return cls;
 }
 
 /// 获取bundleName

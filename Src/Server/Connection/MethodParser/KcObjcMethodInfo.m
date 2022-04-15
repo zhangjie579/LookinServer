@@ -72,9 +72,9 @@
         range = [content rangeOfString:@")"];
         content = [content substringToIndex:range.location];
         
-        id objc = [KcObjcMethodParser makeObjcWithClassName:content];
-        if (objc) {
-            return objc;
+        Class cls = [KcObjcMethodParser classFromString:content];
+        if (cls) {
+            return [[cls alloc] init];
         }
 
         if (([content hasPrefix:@"0x"] || [content hasPrefix:@"0X"])) { // 16进制字符串, 直接str转int会为0

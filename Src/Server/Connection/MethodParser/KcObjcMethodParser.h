@@ -31,8 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
                             errorType:(KcEvalMethodError *)errorType
                             errorInfo:(NSString *_Nonnull *_Nullable)errorInfo;
 
-/// 创建对象
-+ (nullable id)makeObjcWithClassName:(NSString *)className;
+/// 生成class
++ (nullable Class)classFromString:(NSString *)className;
 
 /// 获取bundleName
 + (nullable NSString *)bundleName;
