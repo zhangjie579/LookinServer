@@ -25,6 +25,8 @@
 #import "LKS_AttrModificationPatchHandler.h"
 #import "LKS_HierarchyDetailsHandler.h"
 #import "LookinStaticAsyncUpdateTask.h"
+#import "KcObjcMethodParser.h"
+#import "KcObjcMethodInfo.h"
 
 @interface LKS_RequestHandler ()
 
@@ -54,6 +56,7 @@
                               
                               @(LookinPush_BringForwardScreenshotTask),
                               @(LookinPush_CanceHierarchyDetails),
+                              @(LookinRequestTypePerformSelector),
                               nil];
     }
     return self;
@@ -289,6 +292,24 @@
             // dispatch 以确保拿到的 enabled 是比较新的
             [self _submitResponseWithData:@(recognizer.enabled) requestType:requestType tag:tag];
         });
+    } else if (requestType == LookinRequestTypePerformSelector) { // 通过runtime执行方法
+        NSDictionary *param = object;
+        NSString *text = param[@"text"];
+        if (!text.length) {
+            [self _submitResponseWithError:LookinErr_Inner requestType:requestType tag:tag];
+            return;
+        }
+        KcObjcMethodResult *evalResult = [KcObjcMethodParser eval:text];
+        NSMutableDictionary *responseData = [NSMutableDictionary dictionaryWithCapacity:2];
+        if (evalResult.error == KcEvalMethodNoError) {
+            if (evalResult.result) {
+                responseData[@"description"] = [evalResult.result description];
+            }
+        } else {
+            responseData[@"errorLog"] = evalResult.errorLog ?: @"";
+        }
+        
+        [self _submitResponseWithData:responseData requestType:requestType tag:tag];
     }
 }
 

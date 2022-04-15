@@ -6,5 +6,6 @@ target 'LookinServer' do
   use_frameworks!
 
   pod 'LookinServer', :path => '../'
+  pod 'OCEval'
 
 end
