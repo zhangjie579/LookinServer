@@ -67,10 +67,7 @@
     }
     
     if ([self.param hasPrefix:@"@id("]) { // @id(UIView), @id(内存地址) -> 创建对象
-        NSRange range = [self.param rangeOfString:@"@id("];
-        NSString *content = [self.param substringFromIndex:range.location + range.length];
-        range = [content rangeOfString:@")"];
-        content = [content substringToIndex:range.location];
+        NSString *content = [self subContentFromString:self.param prefixStr:@"@id(" suffixStr:@")"];
         
         Class cls = [KcObjcMethodParser classFromString:content];
         if (cls) {
@@ -83,17 +80,59 @@
             return (__bridge id)((void *)content.integerValue);
         }
     }
-    else if ([self.param hasPrefix:@"@protocol("]) { // id(xxx)
-        NSRange range = [self.param rangeOfString:@"@protocol("];
-        NSString *protocolName = [self.param substringFromIndex:range.location + range.length];
-        range = [protocolName rangeOfString:@")"];
-        protocolName = [protocolName substringToIndex:range.location];
+    else if ([self.param hasPrefix:@"@protocol("]) {
+        NSString *protocolName = [self subContentFromString:self.param prefixStr:@"@protocol(" suffixStr:@")"];
         
         return NSProtocolFromString(protocolName);
     }
+    
+    BOOL isHit = false;
+    NSString *content = [self subContentFromString:self.param isHit:&isHit];
+    if (isHit) {
+        return content;
+    }
+    
     // 内存地址不能到这里解析, 因为不知道参数的类型, int、memory address、string
     
     return self.param;
+}
+
+/// 截取中间的内容
+- (NSString *)subContentFromString:(NSString *)string isHit:(BOOL *)isHit {
+    // 前缀 - 后缀 -> 求中间的内容
+    NSDictionary<NSString *, NSString *> *prefixSuffixTypes = @{
+//        @"@id(": @")",
+//        @"@protocol(": @")",
+        @"@selector(": @")",
+        @"@'": @"'",
+        @"@\"": @"\"",
+        @"'": @"'",
+        @"\"": @"\"",
+    };
+    
+    for (NSString *prefixKey in prefixSuffixTypes.allKeys) {
+        if (![string hasPrefix:prefixKey]) {
+            continue;
+        }
+        
+        NSString *content = [self subContentFromString:string prefixStr:prefixKey suffixStr:prefixSuffixTypes[prefixKey]];
+        
+        *isHit = true;
+        
+        return content;
+    }
+    
+    return string;
+}
+
+/// 截取中间的内容
+- (NSString *)subContentFromString:(NSString *)string prefixStr:(NSString *)prefixStr suffixStr:(NSString *)suffixStr {
+    NSRange range = [string rangeOfString:prefixStr];
+    NSString *content = [string substringFromIndex:range.location + range.length];
+    range = [content rangeOfString:suffixStr];
+    content = [content substringToIndex:range.location];
+    
+    return content;
 }
 
 @end
