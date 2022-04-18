@@ -248,7 +248,7 @@
             
         case '#': // Class
         {
-            Class arg = NSClassFromString(args);
+            Class arg = [KcObjcMethodParser classFromString:args];
             [inv setArgument:&arg atIndex:index];
         } break;
             
