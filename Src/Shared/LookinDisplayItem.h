@@ -180,4 +180,9 @@ typedef NS_ENUM(NSUInteger, LookinDisplayItemProperty) {
 /// 因为搜索而应该被高亮的字符串
 @property(nonatomic, copy) NSString *highlightedSearchString;
 
+/// 隐藏view, 并保存当前hidden的状态
+- (void)hiddenViewAndSaveCurrentHiddenStatus;
+/// 重置隐藏状态
+- (void)resetHiddenViewStatus;
+
 @end

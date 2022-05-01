@@ -33,6 +33,9 @@
 @property(nonatomic, assign, readwrite) BOOL inHiddenHierarchy;
 @property(nonatomic, assign, readwrite) BOOL displayingInHierarchy;
 
+/// 原始hidden状态, 1: 不隐藏, 2: 隐藏. 因为bool默认为false, 不知道是真的值还是默认值
+@property(nonatomic) int originalHiddenStatus;
+
 @end
 
 @implementation LookinDisplayItem
@@ -558,6 +561,33 @@
         }
     }
     _subtitle = subtitle;
+}
+
+/// 隐藏view, 并保存当前hidden的状态
+- (void)hiddenViewAndSaveCurrentHiddenStatus {
+    if (self.originalHiddenStatus == 0) { // 说明没记录
+        self.originalHiddenStatus = self.isHidden ? 2 : 1;
+    }
+    
+    if (self.isHidden) {
+        return;
+    }
+    
+    self.isHidden = true;
+}
+
+/// 重置隐藏状态
+- (void)resetHiddenViewStatus {
+    // 说明还没有记录原始的状态, 就没有处理过hidden状态
+    if (self.originalHiddenStatus == 0) {
+        return;
+    }
+    
+    if (self.originalHiddenStatus == 1 && self.isHidden != false) {
+        self.isHidden = false;
+    } else if (self.originalHiddenStatus == 2 && self.isHidden != true) {
+        self.isHidden = true;
+    }
 }
 
 @end
