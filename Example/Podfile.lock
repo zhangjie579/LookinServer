@@ -1,23 +1,16 @@
 PODS:
-  - LookinServer (1.0.5)
-  - OCEval (0.1.2)
+  - LookinServer (1.0.6)
 
 DEPENDENCIES:
   - LookinServer (from `../`)
-  - OCEval
-
-SPEC REPOS:
-  trunk:
-    - OCEval
 
 EXTERNAL SOURCES:
   LookinServer:
     :path: "../"
 
 SPEC CHECKSUMS:
-  LookinServer: 3d9a02529ed94a6a08154440c26f6d7f453bb1e7
-  OCEval: 629e8451fdbc18ffe7afca0c023dd1195580a85a
+  LookinServer: 18155b1e4a08213c236a1dd6b7ca52328a70a1e3
 
-PODFILE CHECKSUM: 9672e38cead8ed64841542358c8691b69a3e7bce
+PODFILE CHECKSUM: bc594f4414528ff348fea00e76f6cdce68bb0232
 
 COCOAPODS: 1.11.3

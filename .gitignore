@@ -34,3 +34,6 @@ Pods
 *.xcworkspace
 xcshareddata
 .LSOverride
+# End of https://www.toptal.com/developers/gitignore/api/carthage,cocoapods,fastlane,macos,swiftpackagemanager,xcode
+.swiftpm
+LookinDemo/LookinDemo.xcworkspace

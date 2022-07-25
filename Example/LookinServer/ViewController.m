@@ -7,7 +7,6 @@
 
 #import "ViewController.h"
 #import "NSObject+KcAdd.h"
-#import "OCEval.h"
 
 #import "KcObjcMethodParser.h"
 
