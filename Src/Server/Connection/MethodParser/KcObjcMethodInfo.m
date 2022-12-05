@@ -61,7 +61,7 @@
 @implementation KcObjcMethodParamModel
 
 /// 解析字符串 -> 参数
-- (nullable id)parserParam {
+- (nullable id)parserParamWithSelfObjc:(nullable id)selfObjc {
     if (!self.param) {
         return nil;
     }
@@ -84,6 +84,9 @@
         NSString *protocolName = [self subContentFromString:self.param prefixStr:@"@protocol(" suffixStr:@")"];
         
         return NSProtocolFromString(protocolName);
+    }
+    else if ([self.param isEqualToString:@"self"] || [self.param isEqualToString:@"this"]) {
+        return selfObjc;
     }
     
     BOOL isHit = false;
@@ -139,7 +142,7 @@
 
 @implementation KcObjcInvokeEngine
 
-+ (KcObjcMethodResult *)invokeWithMethodInfo:(KcObjcMethodInfo *)methodInfo {
++ (KcObjcMethodResult *)invokeWithMethodInfo:(KcObjcMethodInfo *)methodInfo selfObjc:(nullable NSObject *)selfObjc {
     KcObjcMethodResult *result = [[KcObjcMethodResult alloc] init];
     
     SEL sel = NSSelectorFromString(methodInfo.selectorName);
@@ -162,7 +165,7 @@
     
     NSUInteger count = [sig numberOfArguments];
     for (int index = 2; index < count; index++) {
-        [self setInvocation:inv withSig:sig andArgs:methodInfo.params[index - 2].parserParam index:index];
+        [self setInvocation:inv withSig:sig andArgs:[methodInfo.params[index - 2] parserParamWithSelfObjc:selfObjc] index:index];
     }
     
     [inv invoke];
@@ -366,6 +369,10 @@
         return false;
     }
     
+    if ([text isEqualToString:@"self"] || [text isEqualToString:@"this"]) {
+        return true;
+    }
+    
     // 因为setInvocation设置参数时, 参数类型为@, 当为string时, 它也是可以数字开头的; 只有class name不能以数字开头
     // 单独处理0, 因为转intValue失败, 会为0
 //    NSString *firstStr = [text substringToIndex:1];
@@ -387,6 +394,18 @@
     uintptr_t address;
     sscanf(hexAddress.UTF8String, "%lx", &address);
     return (__bridge id)(void *)address;
+}
+
+/// text -> 对象
+/// - Parameters:
+///   - text: 内存地址0x..., self, this
+///   - selfObjc: self对象
++ (id)objcFromText:(NSString *)text selfObjc:(nullable NSObject *)selfObjc {
+    if ([text isEqualToString:@"self"] || [text isEqualToString:@"this"]) {
+        return selfObjc;
+    } else {
+        return [self objcFromHexAddress:text];
+    }
 }
 
 @end

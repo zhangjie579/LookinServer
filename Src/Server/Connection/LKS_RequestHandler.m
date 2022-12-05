@@ -299,7 +299,11 @@
             [self _submitResponseWithError:LookinErr_Inner requestType:requestType tag:tag];
             return;
         }
-        KcObjcMethodResult *evalResult = [KcObjcMethodParser eval:text];
+        
+        unsigned long oid = [param[@"oid"] unsignedLongValue];
+        NSObject *targerObj = [NSObject lks_objectWithOid:oid];
+        
+        KcObjcMethodResult *evalResult = [KcObjcMethodParser eval:text selfObjc:targerObj];
         NSMutableDictionary *responseData = [NSMutableDictionary dictionaryWithCapacity:2];
         if (evalResult.error == KcEvalMethodNoError) {
             if (evalResult.result) {

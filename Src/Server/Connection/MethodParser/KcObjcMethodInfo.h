@@ -30,7 +30,7 @@ typedef NS_ENUM(NSUInteger, KcEvalMethodError) {
 @property (nonatomic, copy, nullable) NSString *param;
 
 /// 解析字符串 -> 参数
-- (nullable id)parserParam;
+- (nullable id)parserParamWithSelfObjc:(nullable id)selfObjc;
 
 @end
 
@@ -68,13 +68,19 @@ typedef NS_ENUM(NSUInteger, KcEvalMethodError) {
 /// 执行方法
 @interface KcObjcInvokeEngine : NSObject
 
-+ (KcObjcMethodResult *)invokeWithMethodInfo:(KcObjcMethodInfo *)methodInfo;
++ (KcObjcMethodResult *)invokeWithMethodInfo:(KcObjcMethodInfo *)methodInfo selfObjc:(nullable NSObject *)selfObjc;
 
 /// 是否是对象地址
 + (BOOL)isObjcAddessWithText:(NSString *)text;
 
 /// 16进制对象地址 -> 对象
 + (id)objcFromHexAddress:(NSString *)hexAddress;
+
+/// text -> 对象
+/// - Parameters:
+///   - text: 内存地址0x..., self, this
+///   - selfObjc: self对象
++ (id)objcFromText:(NSString *)text selfObjc:(nullable NSObject *)selfObjc;
 
 @end
 

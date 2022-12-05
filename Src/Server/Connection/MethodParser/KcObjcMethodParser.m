@@ -87,9 +87,13 @@
 
 /// 执行方法
 + (KcObjcMethodResult *)eval:(NSString *)text {
+    return [self eval:text selfObjc:nil];
+}
+
++ (KcObjcMethodResult *)eval:(NSString *)text selfObjc:(nullable NSObject *)selfObjc {
     NSString *errorInfo = @"";
     KcEvalMethodError errorType;
-    KcObjcMethodInfo *_Nullable methodInfo = [self parser:text errorType:&errorType errorInfo:&errorInfo];
+    KcObjcMethodInfo *_Nullable methodInfo = [self parser:text errorType:&errorType errorInfo:&errorInfo selfObjc:selfObjc];
     
     if (!methodInfo) {
         KcObjcMethodResult *result = [[KcObjcMethodResult alloc] init];
@@ -99,12 +103,13 @@
         return result;
     }
     
-    return [KcObjcInvokeEngine invokeWithMethodInfo:methodInfo];
+    return [KcObjcInvokeEngine invokeWithMethodInfo:methodInfo selfObjc:selfObjc];
 }
 
 + (nullable KcObjcMethodInfo *)parser:(NSString *)text
                             errorType:(KcEvalMethodError *)errorType
-                            errorInfo:(NSString *_Nonnull *_Nullable)errorInfo {
+                            errorInfo:(NSString *_Nonnull *_Nullable)errorInfo
+                             selfObjc:(nullable NSObject *)selfObjc {
     
     // 过滤前后空格
     NSString *codeStr = [text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -141,7 +146,7 @@
         
         if ([KcObjcInvokeEngine isObjcAddessWithText:targetStr]) { // 说明失败
             info.instanceMethod = true;
-            info.target = [KcObjcInvokeEngine objcFromHexAddress:targetStr];
+            info.target = [KcObjcInvokeEngine objcFromText:targetStr selfObjc:selfObjc];
             
             if (!info.target) { // 解析target失败
                 *errorType = KcEvalMethodParserTargetError;
