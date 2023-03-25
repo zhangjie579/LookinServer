@@ -1,6 +1,22 @@
 # OS X
 .DS_Store
 
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+### SwiftPackageManager ###
+Packages
+.build/
+xcuserdata
+DerivedData/
+#*.xcodeproj
+
+
+### Xcode ###
 # Xcode
 build/
 *.pbxuser
@@ -36,4 +52,7 @@ xcshareddata
 .LSOverride
 # End of https://www.toptal.com/developers/gitignore/api/carthage,cocoapods,fastlane,macos,swiftpackagemanager,xcode
 .swiftpm
-LookinDemo/LookinDemo.xcworkspace
+LookinDemo/OC/LookinDemoOC.xcodeproj/project.xcworkspace/xcshareddata
+LookinDemo/Swift/LookinDemoSwift.xcodeproj/project.xcworkspace/xcshareddata
+LookinDemo/Swift/LookinDemoSwift.xcworkspace/xcshareddata
+LookinDemo/OC/LookinDemoOC.xcworkspace/xcshareddata
