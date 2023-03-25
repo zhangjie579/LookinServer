@@ -15,6 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSArray<NSString *> *)collapsedClassList;
 
+/// 过滤显示的类名
++ (NSArray<NSString *> *)filterShowClassList;
+
 + (NSDictionary<NSString *, UIColor *> *)colorAlias;
 
 + (BOOL)shouldCaptureScreenshotOfLayer:(CALayer *)layer;

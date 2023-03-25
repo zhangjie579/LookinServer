@@ -46,6 +46,9 @@
 
 @property(nonatomic, assign) int serverSetupType;
 
+/// 过滤显示的类名
+@property(nonatomic, copy) NSArray<NSString *> *filterShowClassList;
+
 @end
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */
