@@ -28,22 +28,6 @@
     return legacyCodeResult;
 }
 
-/// 过滤显示的类名
-+ (NSArray<NSString *> *)filterShowClassList {
-    NSArray<NSString *> *result = [self queryCollapsedClassListWithClass:[NSObject class] selector:@"lookin_filterShowClassList"];
-    if (result) {
-        return result;
-    }
-    
-    // Legacy logic. Deprecated.
-    Class configClass = NSClassFromString(@"LookinConfig");
-    if (!configClass) {
-        return nil;
-    }
-    NSArray<NSString *> *legacyCodeResult = [self queryCollapsedClassListWithClass:configClass selector:@"filterShowClasses"];
-    return legacyCodeResult;
-}
-
 + (NSArray<NSString *> *)queryCollapsedClassListWithClass:(Class)class selector:(NSString *)selectorName {
     SEL selector = NSSelectorFromString(selectorName);
     if (![class respondsToSelector:selector]) {

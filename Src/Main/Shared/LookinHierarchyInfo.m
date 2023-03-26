@@ -33,7 +33,6 @@
     info.collapsedClassList = [LKSConfigManager collapsedClassList];
     info.colorAlias = [LKSConfigManager colorAlias];
     info.serverSetupType = LOOKIN_SERVER_SETUP_TYPE;
-    info.filterShowClassList = [LKSConfigManager filterShowClassList];
     return info;
 }
 
@@ -45,7 +44,6 @@
     info.collapsedClassList = [LKSConfigManager collapsedClassList];
     info.colorAlias = [LKSConfigManager colorAlias];
     info.serverSetupType = LOOKIN_SERVER_SETUP_TYPE;
-    info.filterShowClassList = [LKSConfigManager filterShowClassList];
     return info;
 }
 
@@ -57,7 +55,6 @@
     info.collapsedClassList = [LKSConfigManager collapsedClassList];
     info.colorAlias = [LKSConfigManager colorAlias];
     info.serverSetupType = LOOKIN_SERVER_SETUP_TYPE;
-    info.filterShowClassList = [LKSConfigManager filterShowClassList];
     return info;
 }
 
@@ -77,7 +74,6 @@ static NSString * const LookinHierarchyInfoCodingKey_CollapsedClassList = @"4";
     [aCoder encodeObject:self.appInfo forKey:LookinHierarchyInfoCodingKey_AppInfo];
     [aCoder encodeInt:self.serverVersion forKey:@"serverVersion"];
     [aCoder encodeInt:self.serverSetupType forKey:@"serverSetupType"];
-    [aCoder encodeObject:self.filterShowClassList forKey:@"filterShowClassList"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -88,7 +84,6 @@ static NSString * const LookinHierarchyInfoCodingKey_CollapsedClassList = @"4";
         self.appInfo = [aDecoder decodeObjectForKey:LookinHierarchyInfoCodingKey_AppInfo];
         self.serverVersion = [aDecoder decodeIntForKey:@"serverVersion"];
         self.serverSetupType = [aDecoder decodeIntForKey:@"serverSetupType"];
-        self.filterShowClassList = [aDecoder decodeObjectForKey:@"filterShowClassList"];
     }
     return self;
 }
