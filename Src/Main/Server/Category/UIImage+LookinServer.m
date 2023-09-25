@@ -25,6 +25,10 @@
         newMethod = class_getClassMethod([self class], @selector(lks_imageWithContentsOfFile:));
         method_exchangeImplementations(oriMethod, newMethod);
         
+        oriMethod = class_getInstanceMethod([self class], @selector(initWithContentsOfFile:));
+        newMethod = class_getInstanceMethod([self class], @selector(lks_initWithContentsOfFile:));
+        method_exchangeImplementations(oriMethod, newMethod);
+        
         oriMethod = class_getClassMethod([self class], @selector(imageNamed:inBundle:compatibleWithTraitCollection:));
         newMethod = class_getClassMethod([self class], @selector(lks_imageNamed:inBundle:compatibleWithTraitCollection:));
         method_exchangeImplementations(oriMethod, newMethod);
@@ -71,6 +75,13 @@
 
 - (NSString *)lks_imageSourceName {
     return [self lookin_getBindObjectForKey:@"lks_imageSourceName"];
+}
+
+- (instancetype)lks_initWithContentsOfFile:(NSString *)path {
+    UIImage *image = [self lks_initWithContentsOfFile:path];
+    NSString *fileName = [[path componentsSeparatedByString:@"/"].lastObject componentsSeparatedByString:@"."].firstObject;
+    image.lks_imageSourceName = fileName;
+    return image;
 }
 
 - (NSData *)lookin_data {
