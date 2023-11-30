@@ -14,6 +14,17 @@
 
 @implementation UIImage (LookinServer)
 
+#ifdef LOOKIN_SERVER_DISABLE_HOOK
+
+- (void)setLks_imageSourceName:(NSString *)lks_imageSourceName {
+}
+
+- (NSString *)lks_imageSourceName {
+    return nil;
+}
+
+#else
+
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -83,6 +94,8 @@
     image.lks_imageSourceName = fileName;
     return image;
 }
+
+#endif /* LOOKIN_SERVER_DISABLE_HOOK */
 
 - (NSData *)lookin_data {
     return UIImagePNGRepresentation(self);
