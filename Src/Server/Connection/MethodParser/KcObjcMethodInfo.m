@@ -160,6 +160,9 @@
         result.errorInfo = methodInfo.selectorName;
         return result;
     }
+    
+    // 不强引用参数的话, 可能参数会消耗, 造成野指针⚠️
+    [inv retainArguments];
     [inv setTarget:methodInfo.target];
     [inv setSelector:sel];
     

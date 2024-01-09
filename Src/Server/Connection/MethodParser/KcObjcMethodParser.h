@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
  * 对象方法: [0x12434534 方法名:参数value]
  
  当前支持的参数类型: int等基本数据类型, string, 16进制address, 传递class直接用类名, id(类型) -> 内部会创建对应对象, id(地址) -> 内存会转objc对象
+ 
+ ⚠️: 字符串不用手写 "", 因为内容本身就是string, 如果再加上"", 会错
  */
 + (KcObjcMethodResult *)eval:(NSString *)text selfObjc:(nullable NSObject *)selfObjc;
 
