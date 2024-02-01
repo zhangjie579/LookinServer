@@ -34,6 +34,10 @@
 }
 #endif
 
+- (NSString *)rawClassName {
+    return self.completedSelfClassName;
+}
+
 #pragma mark - <NSCopying>
 
 - (id)copyWithZone:(NSZone *)zone {
