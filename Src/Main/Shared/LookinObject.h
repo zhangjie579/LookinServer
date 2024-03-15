@@ -39,6 +39,8 @@
 
 @property(nonatomic, copy, readonly) NSString *rawClassName;
 
+- (NSString *)shortSelfClassName;
+
 @end
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

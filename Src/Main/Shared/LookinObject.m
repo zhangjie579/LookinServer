@@ -77,6 +77,17 @@
     return self.classChainList.firstObject;
 }
 
+- (NSString *)shortSelfClassName {
+    NSString *rawClassName = self.rawClassName;
+    
+    NSRange range = [rawClassName rangeOfString:@"."];
+    if (range.location == NSNotFound) {
+        return rawClassName;
+    } else {
+        return [rawClassName substringFromIndex:range.location + range.length];
+    }
+}
+
 @end
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */
