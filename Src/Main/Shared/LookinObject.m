@@ -25,7 +25,7 @@
     lookinObj.oid = [object lks_registerOid];
     
     lookinObj.memoryAddress = [NSString stringWithFormat:@"%p", object];
-    lookinObj.classChainList = [object lks_classChainListWithSwiftPrefix:YES];
+    lookinObj.classChainList = [object lks_classChainList];
     
     lookinObj.specialTrace = object.lks_specialTrace;
     lookinObj.ivarTraces = object.lks_ivarTraces;
@@ -33,10 +33,6 @@
     return lookinObj;
 }
 #endif
-
-- (NSString *)rawClassName {
-    return self.completedSelfClassName;
-}
 
 #pragma mark - <NSCopying>
 
@@ -73,14 +69,12 @@
     return self;
 }
 
-- (void)setClassChainList:(NSArray<NSString *> *)classChainList {
-    _classChainList = classChainList;
-    _completedSelfClassName = classChainList.firstObject;
-    _shortSelfClassName = [_completedSelfClassName lookin_shortClassNameString];
-}
-
 + (BOOL)supportsSecureCoding {
     return YES;
+}
+
+- (NSString *)rawClassName {
+    return self.classChainList.firstObject;
 }
 
 @end

@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "LookinShared"
-  spec.version      = "1.2.6"
+  spec.version      = "1.2.7"
   spec.summary      = "The shared files between client and server side of Lookin."
   spec.description  = "Embed this framework into your iOS project to enable Lookin mac app."
   spec.homepage     = "https://lookin.work"
