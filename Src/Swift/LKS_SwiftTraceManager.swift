@@ -66,20 +66,20 @@ public class LKS_SwiftTraceManager: NSObject {
         let superName = NSStringFromClass(superClass)
         
         guard let childClass = childClass else {
-            return superName
+            return queryShortClassName(classname: superName)
         }
         let childName = NSStringFromClass(childClass)
         if superName == childName {
-            return superName
+            return queryShortClassName(classname: superName)
         }
         let superModule = queryModuleName(classname: superName)
         let childModule = queryModuleName(classname: childName)
         if superModule != nil, superModule == childModule {
-            let shortSuperName = queryShortName(classname: superName)
+            let shortSuperName = queryShortClassName(classname: superName)
             // ( UIKit.UIButton : UIView *)
-            return "\(childName) : \(shortSuperName)"
+            return "\(queryShortClassName(classname: childName)) : \(shortSuperName)"
         }
-        return "\(childName) : \(superName)"
+        return "\(queryShortClassName(classname: childName)) : \(superName)"
     }
     
     private static func queryModuleName(classname: String) -> String? {
@@ -90,13 +90,22 @@ public class LKS_SwiftTraceManager: NSObject {
         return parts[0]
     }
     
-    /// 不包含 module name
+    /// 不包含 module name - 当存在多个命名空间时，这种写法不对
     private static func queryShortName(classname: String) -> String {
         let parts = classname.components(separatedBy: ".")
         if parts.count != 2 {
             return classname
         }
         return parts[1]
+    }
+    
+    private static func queryShortClassName(classname: String) -> String {
+        let parts = classname.components(separatedBy: ".")
+        if parts.count <= 1 {
+            return classname
+        }
+        
+        return parts[1...].joined(separator: ".")
     }
 }
 
