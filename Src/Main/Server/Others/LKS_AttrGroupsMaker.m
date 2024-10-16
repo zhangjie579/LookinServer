@@ -16,6 +16,7 @@
 #import "LookinIvarTrace.h"
 #import "UIColor+LookinServer.h"
 #import "LookinServerDefines.h"
+#import <objc/message.h>
 
 @implementation LKS_AttrGroupsMaker
 
@@ -46,6 +47,35 @@
                     targetObj = layer.lks_hostView;
                 } else {
                     targetObj = layer;
+                }
+                
+                /* target transform
+                 比如一个自定义的label, 但是不继承自label, 这时候可以通过这种方式来桥接
+                 
+                 * 使用: 自定义一个要transform类的分类, 实现下面这个方法即可
+                 
+                 /// 由于当前这个UI只需要展示一些label的属性, 只需要 targetClassName 返回 self, 逻辑让它绕过判断class, 返回nil的还走老逻辑
+                 - (nullable id)lookin_kc_transformTargetWithAction:(SEL)action targetClassName:(NSString *)targetClassName {
+                     if ([targetClassName isEqualToString:@"UILabel"]) {
+                         return self;
+                     }
+                     
+                     return nil;
+                 }
+                 */
+                SEL getter = [LookinDashboardBlueprint getterWithAttrID:attrID];
+                SEL transformTargetSelector = NSSelectorFromString(@"lookin_kc_transformTargetWithAction:targetClassName:");
+                if (getter && transformTargetSelector && [targetObj respondsToSelector:transformTargetSelector]) {
+                    id(*transformTargetPointer)(id, SEL, SEL, NSString *) = (id(*)(id, SEL, SEL, NSString *))class_getMethodImplementation(object_getClass(targetObj), transformTargetSelector);
+                    
+                    NSString *targetClassName = [LookinDashboardBlueprint classNameWithAttrID:attrID];
+                    
+                    id _Nullable transformTargetObj = transformTargetPointer(targetObj, transformTargetSelector, getter, targetClassName);
+                    
+                    if (transformTargetObj) {
+                        LookinAttribute *attr = [self _attributeWithIdentifer:attrID targetObject:transformTargetObj];
+                        return attr;
+                    }
                 }
                 
                 if (targetObj) {
