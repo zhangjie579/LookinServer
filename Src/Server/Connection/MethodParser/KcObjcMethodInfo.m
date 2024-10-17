@@ -179,7 +179,7 @@
     return result;
 }
 
-+ (void)setInvocation:(NSInvocation *)inv withSig:(NSMethodSignature *)sig andArgs:(NSString *)args index:(int)index {
++ (void)setInvocation:(NSInvocation *)inv withSig:(NSMethodSignature *)sig andArgs:(id)args index:(int)index {
 //    NSUInteger count = [sig numberOfArguments];
 //    for (int index = 2; index < count; index++) {
 //
@@ -209,33 +209,33 @@
         case 'l': // 4: long(32bit)
         case 'L': // 4: unsigned long(32bit)
         { // 'char' and 'short' will be promoted to 'int'.
-            int arg = args.intValue;
+            int arg = [args intValue];
             [inv setArgument:&arg atIndex:index];
         } break;
             
         case 'q': // 8: long long / long(64bit) / NSInteger(64bit)
         case 'Q': // 8: unsigned long long / unsigned long(64bit) / NSUInteger(64bit)
         {
-            long long arg = args.longLongValue;
+            long long arg = [args longLongValue];
             [inv setArgument:&arg atIndex:index];
         } break;
             
         case 'f': // 4: float / CGFloat(32bit)
         { // 'float' will be promoted to 'double'.
-            double arg = args.doubleValue;
+            double arg = [args doubleValue];
             float argf = arg;
             [inv setArgument:&argf atIndex:index];
         } break;
             
         case 'd': // 8: double / CGFloat(64bit)
         {
-            double arg = args.doubleValue;
+            double arg = [args doubleValue];
             [inv setArgument:&arg atIndex:index];
         } break;
             
         case 'D': // 16: long double
         {
-            long double arg = args.doubleValue;
+            long double arg = [args doubleValue];
             [inv setArgument:&arg atIndex:index];
         } break;
             
@@ -261,7 +261,7 @@
         case '@': // id
         {
             id arg;
-            if ([self isObjcAddessWithText:args]) { // 说明是address
+            if ([args isKindOfClass:[NSString class]] && [self isObjcAddessWithText:args]) { // 说明是address
                 arg = [self objcFromHexAddress:args];
             } else {
                 arg = args;
@@ -368,6 +368,10 @@
 
 /// 是否是对象地址 - 通过16进制判断
 + (BOOL)isObjcAddessWithText:(NSString *)text {
+    if (![text isKindOfClass:[NSString class]]) {
+        return false;
+    }
+    
     if (text.length <= 0) {
         return false;
     }
