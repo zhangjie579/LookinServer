@@ -36,6 +36,8 @@ LookinAttrGroupIdentifier const LookinAttrGroup_UIStackView = @"UIStackView";
 
 /// 调试方法
 LookinAttrGroupIdentifier const LookinAttrGroup_KcDebugMethod = @"debugMethod";
+// 调用objc方法
+LookinAttrGroupIdentifier const LookinAttrGroup_KcDebugCallObjcMethod = @"kc_debugCallObjcMethod";
 
 LookinAttrGroupIdentifier const LookinAttrGroup_UserCustom = @"guc"; // user custom
 
@@ -132,6 +134,7 @@ LookinAttrSectionIdentifier const LookinAttrSec_UIVisualEffectView_QMUIForegroun
 
 
 LookinAttrSectionIdentifier const LookinAttrSec_KcDebugMethod_Class = @"cl_debugMethod";
+LookinAttrSectionIdentifier const LookinAttrGroup_KcDebugCallObjcMethod_Class = @"kc_debugCallObjcMethod";
 
 LookinAttrSectionIdentifier const LookinAttrSec_UIStackView_Axis = @"usv_axis";
 LookinAttrSectionIdentifier const LookinAttrSec_UIStackView_Distribution = @"usv_dis";
@@ -257,6 +260,9 @@ LookinAttrIdentifier const LookinAttr_UIVisualEffectView_QMUIForegroundColor_Col
 
 /// debug方法的说明
 LookinAttrIdentifier const LookinAttr_Kc_Debug_methodDesc = @"kc_debug_methodDesc";
+/// 获取属性的信息
+LookinAttrIdentifier const LookinAttr_Kc_Debug_getPropertyInfo = @"kc_debug_getPropertyInfo";
+LookinAttrIdentifier const LookinAttr_Kc_Debug_searchKeyPath = @"kc_debug_searchKeyPath";
 
 LookinAttrIdentifier const LookinAttr_UIStackView_Axis_Axis = @"usv_axis_axis";
 LookinAttrIdentifier const LookinAttr_UIStackView_Distribution_Distribution = @"usv_dis_dis";

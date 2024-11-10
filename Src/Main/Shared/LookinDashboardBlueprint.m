@@ -36,6 +36,7 @@
             LookinAttrGroup_UITextField,
             // 调试方法
             LookinAttrGroup_KcDebugMethod,
+            LookinAttrGroup_KcDebugCallObjcMethod,
         ];
     });
     return array;
@@ -143,6 +144,10 @@
                                            LookinAttrSec_UITextField_ClearButtonMode],
             
             LookinAttrGroup_KcDebugMethod: @[LookinAttrSec_KcDebugMethod_Class],
+            
+            LookinAttrGroup_KcDebugCallObjcMethod: @[
+                LookinAttrGroup_KcDebugCallObjcMethod_Class,
+            ],
         };
     });
     return dict[groupID];
@@ -319,6 +324,11 @@
             LookinAttrSec_UITextField_ClearButtonMode: @[LookinAttr_UITextField_ClearButtonMode_Mode],
             
             LookinAttrSec_KcDebugMethod_Class: @[LookinAttr_Kc_Debug_methodDesc],
+            
+            LookinAttrGroup_KcDebugCallObjcMethod_Class: @[
+                LookinAttr_Kc_Debug_getPropertyInfo,
+                LookinAttr_Kc_Debug_searchKeyPath,
+            ],
         };
     });
     return dict[sectionID];
@@ -371,6 +381,7 @@
             LookinAttrGroup_UIStackView: @"UIStackView",
             
             LookinAttrGroup_KcDebugMethod: @"常用调试方法",
+            LookinAttrGroup_KcDebugCallObjcMethod: @"动态调用objc方法",
         };
     });
     NSString *title = rawInfo[groupID];
@@ -1102,7 +1113,22 @@
                 @"getterString": @"xxx",
                 @"setterString": @"",
                 @"typeIfObj": @(LookinAttrTypeCustomObj)
-                },
+            },
+            
+            // 调用objc方法
+            LookinAttr_Kc_Debug_getPropertyInfo: @{
+                @"className": @"UIView",
+                @"getterString": @"xxx",
+                @"setterString": @"",
+                @"typeIfObj": @(LookinAttrTypeCustomObj)
+            },
+            
+            LookinAttr_Kc_Debug_searchKeyPath: @{
+                @"className": @"UIView",
+                @"getterString": @"xxx",
+                @"setterString": @"",
+                @"typeIfObj": @(LookinAttrTypeCustomObj)
+            },
         };
     });
     

@@ -34,6 +34,7 @@ extern LookinAttrGroupIdentifier const LookinAttrGroup_UIVisualEffectView;
 extern LookinAttrGroupIdentifier const LookinAttrGroup_UIStackView;
 
 extern LookinAttrGroupIdentifier const LookinAttrGroup_KcDebugMethod;
+extern LookinAttrGroupIdentifier const LookinAttrGroup_KcDebugCallObjcMethod;
 
 extern LookinAttrGroupIdentifier const LookinAttrGroup_UserCustom;
 
@@ -131,6 +132,7 @@ extern LookinAttrSectionIdentifier const LookinAttrSec_UIVisualEffectView_QMUIFo
 
 
 extern LookinAttrSectionIdentifier const LookinAttrSec_KcDebugMethod_Class;
+extern LookinAttrSectionIdentifier const LookinAttrGroup_KcDebugCallObjcMethod_Class;
 
 extern LookinAttrSectionIdentifier const LookinAttrSec_UIStackView_Axis;
 extern LookinAttrSectionIdentifier const LookinAttrSec_UIStackView_Distribution;
@@ -257,6 +259,9 @@ extern LookinAttrIdentifier const LookinAttr_UIVisualEffectView_QMUIForegroundCo
 
 
 extern LookinAttrIdentifier const LookinAttr_Kc_Debug_methodDesc;
+/// 调用objc的方法
+extern LookinAttrIdentifier const LookinAttr_Kc_Debug_getPropertyInfo;
+extern LookinAttrIdentifier const LookinAttr_Kc_Debug_searchKeyPath;
 
 extern LookinAttrIdentifier const LookinAttr_UIStackView_Axis_Axis;
 extern LookinAttrIdentifier const LookinAttr_UIStackView_Distribution_Distribution;
