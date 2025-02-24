@@ -49,6 +49,11 @@
             newMethod = class_getClassMethod([self class], @selector(lks_imageNamed:inBundle:withConfiguration:));
             method_exchangeImplementations(oriMethod, newMethod);
         }
+        
+        // imageWithRenderingMode:
+        oriMethod = class_getInstanceMethod([self class], @selector(imageWithRenderingMode:));
+        newMethod = class_getInstanceMethod([self class], @selector(lks_imageWithRenderingMode:));
+        method_exchangeImplementations(oriMethod, newMethod);
     });
 }
 
@@ -93,6 +98,14 @@
     NSString *fileName = [[path componentsSeparatedByString:@"/"].lastObject componentsSeparatedByString:@"."].firstObject;
     image.lks_imageSourceName = fileName;
     return image;
+}
+
+- (UIImage *)lks_imageWithRenderingMode:(UIImageRenderingMode)renderingMode {
+    UIImage *img = [self lks_imageWithRenderingMode:renderingMode];
+    
+    img.lks_imageSourceName = self.lks_imageSourceName;
+    
+    return img;
 }
 
 #endif /* LOOKIN_SERVER_DISABLE_HOOK */
