@@ -19,6 +19,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (BOOL)shouldCaptureScreenshotOfLayer:(CALayer *)layer;
 
+/// 注入的方法
++ (NSArray<NSDictionary<NSString *, id> *> *)kc_injectMethods;
+/// 注入执行keyPath的方法
++ (NSArray<NSDictionary<NSString *, id> *> *)kc_injectKeyPathMethods;
+
 @end
 
 NS_ASSUME_NONNULL_END

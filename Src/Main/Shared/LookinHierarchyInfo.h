@@ -42,6 +42,10 @@
 
 @property(nonatomic, assign) int serverVersion;
 
+/// 注入的方法
+@property(nonatomic, copy, nullable) NSArray<NSDictionary<NSString *, id> *> *kc_injectMethods;
+@property(nonatomic, copy, nullable) NSArray<NSDictionary<NSString *, id> *> *kc_injectKeyPathMethods;
+
 @end
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

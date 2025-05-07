@@ -190,6 +190,62 @@
     return YES;
 }
 
+/// 注入的方法
++ (NSArray<NSDictionary<NSString *, id> *> *)kc_injectMethods {
+    return [self queryWithSelector:@"kc_injectMethods"];
+}
+
+/// 注入执行keyPath的方法
++ (NSArray<NSDictionary<NSString *, id> *> *)kc_injectKeyPathMethods {
+    return [self queryWithSelector:@"kc_injectKeyPathMethods"];
+}
+
++ (NSArray<NSDictionary<NSString *, id> *> *)queryWithSelector:(NSString *)selectorName {
+    NSMutableArray<NSDictionary<NSString *, id> *> *array = [NSMutableArray array];
+    
+    NSArray<NSDictionary<NSString *, id> *> *result = [self queryInjectMethodsWithClass:[NSObject class] selector:[NSString stringWithFormat:@"lookin_%@", selectorName]];
+    if (result.count > 0) {
+        [array addObjectsFromArray:result];
+    }
+    
+    for (NSInteger i = 0; i < 5; i++) {
+        NSArray<NSDictionary<NSString *, id> *> *result = [self queryInjectMethodsWithClass:[NSObject class] selector:[NSString stringWithFormat:@"lookin_%@_%ld", selectorName, i]];
+        if (result.count > 0) {
+            [array addObjectsFromArray:result];
+        }
+    }
+    
+    // Legacy logic. Deprecated.
+    Class configClass = NSClassFromString(@"LookinConfig");
+    if (configClass) {
+        NSArray<NSDictionary<NSString *, id> *> *methods = [self queryInjectMethodsWithClass:configClass selector:selectorName];
+        if (methods.count > 0) {
+            [array addObjectsFromArray:methods];
+        }
+    }
+    
+    return array;
+}
+
++ (NSArray<NSDictionary<NSString *, id> *> *)queryInjectMethodsWithClass:(Class)class selector:(NSString *)selectorName {
+    SEL selector = NSSelectorFromString(selectorName);
+    if (![class respondsToSelector:selector]) {
+        return nil;
+    }
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[class methodSignatureForSelector:selector]];
+    [invocation setTarget:class];
+    [invocation setSelector:selector];
+    [invocation invoke];
+    void *arrayValue;
+    [invocation getReturnValue:&arrayValue];
+    id classList = (__bridge id)(arrayValue);
+    
+    if ([classList isKindOfClass:[NSArray class]]) {
+        return [classList copy];
+    }
+    return nil;
+}
+
 @end
 
 #endif /* SHOULD_COMPILE_LOOKIN_SERVER */

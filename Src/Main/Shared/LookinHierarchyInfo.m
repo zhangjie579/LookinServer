@@ -41,6 +41,8 @@
     info.appInfo = [LookinAppInfo currentInfoWithScreenshot:NO icon:YES localIdentifiers:nil];
     info.collapsedClassList = [LKSConfigManager collapsedClassList];
     info.colorAlias = [LKSConfigManager colorAlias];
+    info.kc_injectMethods = [LKSConfigManager kc_injectMethods];
+    info.kc_injectKeyPathMethods = [LKSConfigManager kc_injectKeyPathMethods];
     return info;
 }
 
@@ -51,6 +53,8 @@
     info.appInfo = [LookinAppInfo currentInfoWithScreenshot:NO icon:YES localIdentifiers:nil];
     info.collapsedClassList = [LKSConfigManager collapsedClassList];
     info.colorAlias = [LKSConfigManager colorAlias];
+    info.kc_injectMethods = [LKSConfigManager kc_injectMethods];
+    info.kc_injectKeyPathMethods = [LKSConfigManager kc_injectKeyPathMethods];
     return info;
 }
 
@@ -69,6 +73,8 @@ static NSString * const LookinHierarchyInfoCodingKey_CollapsedClassList = @"4";
     [aCoder encodeObject:self.collapsedClassList forKey:LookinHierarchyInfoCodingKey_CollapsedClassList];
     [aCoder encodeObject:self.appInfo forKey:LookinHierarchyInfoCodingKey_AppInfo];
     [aCoder encodeInt:self.serverVersion forKey:@"serverVersion"];
+    [aCoder encodeObject:self.kc_injectMethods forKey:@"kc_injectMethods"];
+    [aCoder encodeObject:self.kc_injectKeyPathMethods forKey:@"kc_injectKeyPathMethods"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -78,6 +84,8 @@ static NSString * const LookinHierarchyInfoCodingKey_CollapsedClassList = @"4";
         self.collapsedClassList = [aDecoder decodeObjectForKey:LookinHierarchyInfoCodingKey_CollapsedClassList];
         self.appInfo = [aDecoder decodeObjectForKey:LookinHierarchyInfoCodingKey_AppInfo];
         self.serverVersion = [aDecoder decodeIntForKey:@"serverVersion"];
+        self.kc_injectMethods = [aDecoder decodeObjectForKey:@"kc_injectMethods"];
+        self.kc_injectKeyPathMethods = [aDecoder decodeObjectForKey:@"kc_injectKeyPathMethods"];
     }
     return self;
 }
@@ -97,6 +105,8 @@ static NSString * const LookinHierarchyInfoCodingKey_CollapsedClassList = @"4";
     newAppInfo.displayItems = [self.displayItems lookin_map:^id(NSUInteger idx, LookinDisplayItem *oldItem) {
         return oldItem.copy;
     }];
+    newAppInfo.kc_injectMethods = self.kc_injectMethods;
+    newAppInfo.kc_injectKeyPathMethods = self.kc_injectKeyPathMethods;
     
     return newAppInfo;
 }
