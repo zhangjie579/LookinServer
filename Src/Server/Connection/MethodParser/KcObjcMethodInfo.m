@@ -216,8 +216,15 @@
         case 'q': // 8: long long / long(64bit) / NSInteger(64bit)
         case 'Q': // 8: unsigned long long / unsigned long(64bit) / NSUInteger(64bit)
         {
-            long long arg = [args longLongValue];
-            [inv setArgument:&arg atIndex:index];
+            // 16进展 address
+            if ([args isKindOfClass:[NSString class]] && ([args hasPrefix:@"0x"] || [args hasPrefix:@"0X"])) {
+                unsigned long long value = strtoull([args UTF8String], NULL, 0);
+                
+                [inv setArgument:&value atIndex:index];
+            } else {
+                long long arg = [args longLongValue];
+                [inv setArgument:&arg atIndex:index];
+            }
         } break;
             
         case 'f': // 4: float / CGFloat(32bit)
