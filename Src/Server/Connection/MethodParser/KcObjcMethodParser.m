@@ -91,6 +91,95 @@
 }
 
 + (KcObjcMethodResult *)eval:(NSString *)text selfObjc:(nullable NSObject *)selfObjc {
+    // [[[self x1] x2:[xx xx3] wew] sdasd]
+    NSMutableArray<NSNumber *> *stack = [[NSMutableArray alloc] init];
+    
+    NSMutableArray<KcObjcMethodResult *> *methodResults = [[NSMutableArray alloc] init];
+    NSMutableArray<NSString *> *methodNames = [[NSMutableArray alloc] init];
+    
+    for (NSInteger i = 0; i < text.length; i++) {
+        NSString *charStr = [text substringWithRange:NSMakeRange(i, 1)];
+        
+        if ([charStr isEqualToString:@"["]) {
+            [stack addObject:@(i)];
+        } else if ([charStr isEqualToString:@"]"]) {
+            NSNumber *number = stack[stack.count - 1];
+            NSInteger startIndex = number.integerValue;
+            
+            [stack removeLastObject];
+            
+            NSRange range = NSMakeRange(startIndex, i - startIndex + 1);
+            
+            // 2 3
+            NSString *method = [text substringWithRange:range];
+            
+            
+            // [[self x1: [x x1]]
+            // [[[self x1] x2:[xx xx3]] sdasd] -> ] x2:
+            /*
+             [self x1]
+             
+             [xx xx3]
+             
+             [a x2: b]
+             
+             [d sdasd]
+             */
+            // 是不是单个方法, 比如: [self x1]
+            BOOL isOneMethod = YES;
+            NSInteger leftCount = 0;
+            for (NSInteger k = 0; k < method.length; k++) {
+                NSString *c = [method substringWithRange:NSMakeRange(k, 1)];
+                
+                if ([c isEqualToString:@"["]) {
+                    leftCount += 1;
+                }
+                
+                if (leftCount > 1) { // 说明不是单个方法
+                    isOneMethod = NO;
+                    break;
+                }
+            }
+            
+            // 不是单个方法 [[self x1] x2], 就需要一层一层的替换
+            // 因为方法的执行肯定是先内层再外层, so替换的顺序也就先内层再外层
+            if (!isOneMethod) {
+                for (NSInteger j = 0; j < methodResults.count; j++) {
+                    KcObjcMethodResult *subResult = methodResults[j];
+                    
+                    NSString *name = methodNames[j];
+                    
+                    NSRange r1 = [method rangeOfString:name];
+                    
+                    // 不能直接存 range来换，因为换了1次后，range就变了
+                    if (r1.location != NSNotFound) {
+                        // 这里替换成地址, 就算是str也不会有问题
+                        // 因为内存没有free, KcObjcMethodResult中还存在
+                        method = [method stringByReplacingCharactersInRange:r1 withString:[NSString stringWithFormat:@"%p", subResult.result]];
+                    }
+                }
+            }
+            
+            KcObjcMethodResult *result = [self evalOnlyOneMethod:method selfObjc:selfObjc];
+            
+            if (result.error) {
+                return result;
+            }
+            
+            [methodResults addObject:result];
+            [methodNames addObject:method];
+            
+            if (stack.count == 0) { // 说明完了
+                return result;
+            }
+        }
+    }
+    
+    return nil;
+}
+
+/// 执行一层方法, [xx xx], 不能执行 [[xx xx] xx1]
++ (KcObjcMethodResult *)evalOnlyOneMethod:(NSString *)text selfObjc:(nullable NSObject *)selfObjc {
     NSString *errorInfo = @"";
     KcEvalMethodError errorType;
     KcObjcMethodInfo *_Nullable methodInfo = [self parser:text errorType:&errorType errorInfo:&errorInfo selfObjc:selfObjc];
@@ -99,6 +188,7 @@
         KcObjcMethodResult *result = [[KcObjcMethodResult alloc] init];
         result.error = errorType;
         result.errorInfo = errorInfo;
+        result.methodName = text;
         
         return result;
     }
@@ -201,6 +291,13 @@
 
 /// 生成class
 + (nullable Class)classFromString:(NSString *)className {
+    // 16进制
+    if ([className hasPrefix:@"0x"] || [className hasPrefix:@"0X"]) {
+        unsigned long long value = strtoull([className UTF8String], NULL, 0);
+        
+        return (__bridge Class)((void *)value);
+    }
+    
     Class cls = NSClassFromString(className);
     if (cls) {
         return cls;

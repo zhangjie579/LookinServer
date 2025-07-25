@@ -51,6 +51,9 @@ typedef NS_ENUM(NSUInteger, KcEvalMethodError) {
 /// 方法的结果
 @interface KcObjcMethodResult : NSObject
 
+/// 方法名
+@property (nonatomic, copy) NSString *methodName;
+
 /// 执行方法的结果
 /// 如果结果为nil, 说明没有返回值, 前提KcEvalMethodError为no
 @property (nonatomic, nullable) id result;

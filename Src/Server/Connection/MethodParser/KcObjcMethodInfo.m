@@ -175,6 +175,7 @@
     
     result.error = KcEvalMethodNoError;
     result.result = [NSObject kc_getReturnFromInv:inv withSig:sig];
+    result.methodName = methodInfo.selectorName;
     
     return result;
 }
